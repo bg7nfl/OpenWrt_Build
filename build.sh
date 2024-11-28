@@ -83,8 +83,7 @@ fi
 echo -e "download package"
 make download -j8 V=s
 
-# find dl -size -1024c -exec ls -l {} \;
-# find dl -size -1024c -exec rm -f {} \;
+# find dl -size -1024c -exec ls -l {} \; -exec rm -f {} \;
 
 echo -e "$(nproc) thread compile"
 make -j$(nproc) V=s || make -j1 V=s
