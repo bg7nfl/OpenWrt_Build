@@ -1,0 +1,32 @@
+diff --git a/src/SDIO/driver_fw/driver/aic8800/aic8800_fdrv/rwnx_rx.c b/src/SDIO/driver_fw/driver/aic8800/aic8800_fdrv/rwnx_rx.c
+index 7b42358..c5b5e98 100644
+--- a/src/SDIO/driver_fw/driver/aic8800/aic8800_fdrv/rwnx_rx.c
++++ b/src/SDIO/driver_fw/driver/aic8800/aic8800_fdrv/rwnx_rx.c
+@@ -2115,8 +2115,12 @@ check_len_update:
+ 		if (rwnx_vif) {
+ #ifdef CONFIG_GKI
+ 			rwnx_cfg80211_rx_spurious_frame(rwnx_vif->ndev, hdr->addr2, GFP_ATOMIC);
++#else
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 17, 0) || defined(BUILD_OPENWRT)
++            cfg80211_rx_spurious_frame(rwnx_vif->ndev, hdr->addr2, -1, GFP_ATOMIC);
+ #else
+             cfg80211_rx_spurious_frame(rwnx_vif->ndev, hdr->addr2, GFP_ATOMIC);
++#endif
+ #endif
+ 		}
+ 		goto end;
+@@ -2406,9 +2410,14 @@ check_len_update:
+ #ifdef CONFIG_GKI
+ 					rwnx_cfg80211_rx_unexpected_4addr_frame(rwnx_vif->ndev,
+ 													   sta->mac_addr, GFP_ATOMIC);
++#else
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 17, 0) || defined(BUILD_OPENWRT)
++                    cfg80211_rx_unexpected_4addr_frame(rwnx_vif->ndev,
++                                                       sta->mac_addr, -1, GFP_ATOMIC);
+ #else
+                     cfg80211_rx_unexpected_4addr_frame(rwnx_vif->ndev,
+                                                        sta->mac_addr, GFP_ATOMIC);
++#endif
+ #endif
+ 				}
+ 			}
